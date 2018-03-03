@@ -1,3 +1,9 @@
+"""
+Jenkins methods.
+
+(c) 2018 Balloon Inc. VOF
+Wouter Devriendt
+"""
 import requests
 import os
 

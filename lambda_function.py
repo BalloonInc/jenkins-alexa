@@ -35,9 +35,10 @@ def endSession():
         card_title, speech_output, None, should_end_session))
 
 def startJob(intent, session):
-    jenkins.startJob("BalloonInc-web", settings)
+    r = jenkins.startJob("BalloonInc-web", settings)
     session_attributes = {}
-    speech_output = "Starting a job is not yet implemented"
+    print(r)
+    speech_output = "The job is started"
 
     should_end_session = True
     reprompt_text = "Which job should I start?"
