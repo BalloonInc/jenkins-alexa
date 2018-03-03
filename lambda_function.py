@@ -5,13 +5,16 @@ Alexa skill for Jenkins, to be ran in AWS lambda.
 Wouter Devriendt
 """
 import os
+import time
+
 import jenkins
-from jenkins import JenkinsSettings
+from jenkins import Jenkins
 import alexahelpers as ah
 
-settings = JenkinsSettings()
+jenkins = Jenkins()
 
 # --------------- Functions that control the skill's behavior ------------------
+
 
 def getWelcomeResponse():
     session_attributes = {}
@@ -29,39 +32,59 @@ def getWelcomeResponse():
 def endSession():
     card_title = "Session Ended"
     speech_output = "Jenkins, out, have a nice day! "
-    # Setting this to true ends the session and exits the skill.
     should_end_session = True
     return ah.build_response({}, ah.build_speechlet_response(
         card_title, speech_output, None, should_end_session))
 
+
 def startJob(intent, session):
-    r = jenkins.startJob("BalloonInc-web", settings)
+    r = jenkins.startJob("sleep-test")
     session_attributes = {}
     print(r)
-    speech_output = "The job is started"
+    speech_output = "The job is queued for running, and will take approximately "
 
-    should_end_session = True
+    should_end_session = False
     reprompt_text = "Which job should I start?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
+
 def abortJob(intent, session):
     session_attributes = {}
-    speech_output = "Aborting a job is not yet implemented"
+    r = jenkins.abortJob("sleep-test")
+    speech_output = "I aborted the job."
     reprompt_text = "Which job should I abort?"
-    should_end_session = True
+    should_end_session = False
     return ah.build_response(session_attributes, ah.build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
+
 def getJobStatus(intent, session):
     session_attributes = {}
-    speech_output = "Getting a job status is not yet implemented"
     reprompt_text = "Which job should I get the status for?"
-    should_end_session = True
+    should_end_session = False
+
+    r = jenkins.getJobStatus("sleep-test")
+    if r.status_code > 299 or r.status_code < 200:
+        speech_output = "I cannot get a status at the moment. Try again in a little while."
+    else:
+        res = r.json()
+        if res["building"]:
+            speech_output = "The build is ongoing, expect it to run for another" + res["duration"] - (time.time() - res["timestamp"])
+        else:
+            if res["result"] == "SUCCESS":
+                speech_output = "The build finished succesfully in " + str(res["duration"])
+            elif res["result"] == "ABORTED":
+                speech_output = "The build was aborted after " + str(res["duration"])
+            elif res["result"] == "FAILED":
+                speech_output = "The build failed after " + str(res["duration"])
+            else:
+                speech_output = "The build is " + res["result"]
     return ah.build_response(session_attributes, ah.build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
 
 # --------------- Events ------------------
+
 
 def on_session_started(session_started_request, session):
     """ If we wanted to initialize the session to have some attributes we could
@@ -70,10 +93,8 @@ def on_session_started(session_started_request, session):
     print("on_session_started requestId=" + session_started_request['requestId']
           + ", sessionId=" + session['sessionId'])
 
-    newSettings = jenkins.readSettingsFromEnvironment()
-    settings.jenkins_url = newSettings.jenkins_url
-    settings.username = newSettings.username
-    settings.auth_token = newSettings.auth_token
+    jenkins.readSettingsFromEnvironment()
+
 
 def on_launch(launch_request, session):
     """ Called when the user launches the skill without specifying what they
@@ -107,6 +128,7 @@ def on_intent(intent_request, session):
         return endSession()
     else:
         raise ValueError("Invalid intent")
+
 
 def on_session_ended(session_ended_request, session):
     """ Called when the user ends the session.
