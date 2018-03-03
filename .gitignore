@@ -99,3 +99,6 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# settings should not be commited
+settings.yaml

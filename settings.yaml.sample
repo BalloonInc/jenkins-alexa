@@ -1,0 +1,3 @@
+jenkins_url: [jenkins_root_URL]
+jenkins_username: [jenkins_username]
+jenkins_auth_token: [jenkins_auth_password]
