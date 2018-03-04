@@ -106,7 +106,6 @@
                     }
                 ],
                 "samples": [
-                    "run job {jobname}",
                     "run {jobname}",
                     "build {jobname}",
                     "initiate the build for {jobname}",
@@ -121,6 +120,15 @@
             {
                 "name": "JOBNAME",
                 "values": [
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "sleep-test",
+                            "synonyms": [
+                                "sleep test"
+                            ]
+                        }
+                    },
                     {
                         "id": "",
                         "name": {
