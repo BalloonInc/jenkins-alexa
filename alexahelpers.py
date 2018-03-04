@@ -9,7 +9,7 @@ Wouter Devriendt
 
 
 def build_speechlet_response(title, output, reprompt_text, should_end_session, directives=None):
-    speechlet = {
+    return {
         'outputSpeech': {
             'type': 'PlainText',
             'text': output
@@ -27,11 +27,6 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session, d
         },
         'shouldEndSession': should_end_session
     }
-
-    if directives:
-        speechlet['directives'] = directives
-
-    return speechlet
 
 def build_response(session_attributes, speechlet_response):
     return {
