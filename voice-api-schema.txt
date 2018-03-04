@@ -1,0 +1,16 @@
+--> Alexa, start jenkins
+   --Welcome to jenkins. Do you want to start a job, get status info or abort a job?
+
+	--> What can I ask you?
+	      -- You can ask me to start a job, get the status of a job, or abort a job.
+    --> start {job}
+          -- I started {job}. It should take {ETA}.
+    --> get status for {job}
+    	  -- The latest run for {job} {status}. [I estimate it will take {ETA}]
+    --> abort {job}
+          -- I aborted {job}. 
+
+
+job: String #jobname
+ETA: DateTime #estimated time until finish
+status: enum # possible values: [is running, has finished succesfully, has been aborted, has failed]

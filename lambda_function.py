@@ -38,15 +38,28 @@ def endSession():
 
 
 def startJob(intent, session):
-    r = jenkins.startJob("sleep-test")
     session_attributes = {}
-    print(r)
-    speech_output = "The job is queued for running, and will take approximately "
+    speech_output = ""
+    directives = None
+    rawJobName = getRawJobNameFromIntent(intent)
+    if rawJobName:
+        print("raw job name found")
+        jobName = jenkins.searchJobByName(rawJobName)
+        if not jobName:
+            print("didn't understand the jobname")
+            speech_output = "I didn't find the job: " + rawJobName
+        else:
+            print("all good, found the job, starting it now.")
+            r = jenkins.startJob(jobName)
+            speech_output = "The job is queued for running, and will take approximately "
+    else:
+        print("no job name given")
+        directives = [{"type": "Dialog.Delegate"}]
 
     should_end_session = False
     reprompt_text = "Which job should I start?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+        intent['name'], speech_output, reprompt_text, should_end_session, directives))
 
 
 def abortJob(intent, session):
@@ -70,18 +83,32 @@ def getJobStatus(intent, session):
     else:
         res = r.json()
         if res["building"]:
-            speech_output = "The build is ongoing, expect it to run for another" + res["duration"] - (time.time() - res["timestamp"])
+            speech_output = "The build is ongoing, expect it to run for another" + \
+                res["duration"] - (time.time() - res["timestamp"])
         else:
             if res["result"] == "SUCCESS":
-                speech_output = "The build finished succesfully in " + str(res["duration"])
+                speech_output = "The build finished succesfully in " + \
+                    str(res["duration"])
             elif res["result"] == "ABORTED":
-                speech_output = "The build was aborted after " + str(res["duration"])
+                speech_output = "The build was aborted after " + \
+                    str(res["duration"])
             elif res["result"] == "FAILED":
-                speech_output = "The build failed after " + str(res["duration"])
+                speech_output = "The build failed after " + \
+                    str(res["duration"])
             else:
                 speech_output = "The build is " + res["result"]
     return ah.build_response(session_attributes, ah.build_speechlet_response(
         intent['name'], speech_output, reprompt_text, should_end_session))
+
+
+def getRawJobNameFromIntent(intent):
+    if 'slots' not in intent:
+        return None
+    if 'jobname' not in intent['slots']:
+        return None
+    if 'value' not in intent['slots']['jobname']:
+        return None
+    return intent['slots']['jobname']['value']
 
 # --------------- Events ------------------
 
@@ -108,7 +135,8 @@ def on_launch(launch_request, session):
 
 def on_intent(intent_request, session):
     """ Called when the user specifies an intent for this skill """
-
+    print(intent_request)
+    print(intent_request['intent'])
     print("on_intent requestId=" + intent_request['requestId'] +
           ", sessionId=" + session['sessionId']+", intentName=" + intent_request['intent']['name'])
 

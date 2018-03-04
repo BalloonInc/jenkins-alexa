@@ -106,6 +106,7 @@
                     }
                 ],
                 "samples": [
+                    "run job {jobname}",
                     "run {jobname}",
                     "build {jobname}",
                     "initiate the build for {jobname}",

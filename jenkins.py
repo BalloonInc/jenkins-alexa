@@ -6,7 +6,7 @@ Wouter Devriendt
 """
 import requests
 import os
-
+from fuzzywuzzy import process
 
 class Jenkins:
     def __init__(self, jenkins_url=None, username=None, auth_token=None, jobs=[]):
@@ -36,6 +36,10 @@ class Jenkins:
         r = requests.get(url, auth=self.getAuth())
         self.jobs = [job["name"] for job in r.json()['jobs']]
 
+    def searchJobByName(self, jobname):
+        res = process.extractOne(jobname, self.getAllJobs())
+        return res[0] if res[1] > 86 else None
+
     def getJobStatus(self, jobname):
         url = self.jenkins_url + "/job/" + jobname + \
             "/lastBuild/api/json?tree=result,timestamp,estimatedDuration,number,building,duration"
@@ -63,26 +67,39 @@ class Jenkins:
                 exit()
 
 
+# --------------- Tests for job interaction and fuzzy search ------------------
+def testJobInteraction(jenkins):
+    print(jenkins.getAllJobs())
+
+    r = jenkins.getJobStatus("sleep-test")
+    print(r.json())
+
+    # Start the job
+    r = jenkins.startJob("sleep-test")
+    print(r.text)
+
+    # Get the job status immediately
+    r = jenkins.getJobStatus("sleep-test")
+    print(r.json()["building"])
+
+    # Get it again ten seconds later
+    time.sleep(10)
+    r = jenkins.getJobStatus("sleep-test")
+    print(r.json()["building"])
+
+    # Abort the job
+    r = jenkins.abortJob("sleep-test")
+    print(r.text)
+
+def testFuzzySearch(jenkins):
+    print(jenkins.searchJobByName("website build"))
+    print(jenkins.searchJobByName("sleeping test"))
+    print(jenkins.searchJobByName("sleep test"))
+
 if __name__ == "__main__":
     import time
     jenkins = Jenkins()
     jenkins.readSettingsFromFile()
 
-    print(jenkins.getAllJobs())
-
-    r = jenkins.getJobStatus("sleep-test")
-    # print(r.json())
-
-    # Start the job
-    r = jenkins.startJob("sleep-test")
-    print(r.text)
-    # time.sleep(5)
-
-    # Get the job status every second
-    for _ in range(6):
-        r = jenkins.getJobStatus("sleep-test")
-        print(r.json()["building"])
-        time.sleep(2)
-    # Abort the job
-    r = jenkins.abortJob("sleep-test")
-    print(r.text)
+    testJobInteraction(jenkins)
+    testFuzzySearch(jenkins)

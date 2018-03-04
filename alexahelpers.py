@@ -8,16 +8,16 @@ Wouter Devriendt
 # --------------- Helpers that build all of the responses ----------------------
 
 
-def build_speechlet_response(title, output, reprompt_text, should_end_session):
-    return {
+def build_speechlet_response(title, output, reprompt_text, should_end_session, directives=None):
+    speechlet = {
         'outputSpeech': {
             'type': 'PlainText',
             'text': output
         },
         'card': {
             'type': 'Simple',
-            'title': "SessionSpeechlet - " + title,
-            'content': "SessionSpeechlet - " + output
+            'title': "Jenkins - " + title,
+            'content': "Jenkins - " + output
         },
         'reprompt': {
             'outputSpeech': {
@@ -28,6 +28,10 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session):
         'shouldEndSession': should_end_session
     }
 
+    if directives:
+        speechlet['directives'] = directives
+
+    return speechlet
 
 def build_response(session_attributes, speechlet_response):
     return {
