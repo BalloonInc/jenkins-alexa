@@ -4,35 +4,40 @@ Jenkins methods.
 (c) 2018 Balloon Inc. VOF
 Wouter Devriendt
 """
-from pprint import pprint
-
 import requests
 import os
 
 
 class Jenkins:
-    def __init__(self, jenkins_url=None, username=None, auth_token=None):
+    def __init__(self, jenkins_url=None, username=None, auth_token=None, jobs=[]):
         self.jenkins_url = jenkins_url
         self.username = username
         self.auth_token = auth_token
+        self.jobs = jobs
 
     def getAuth(self):
         return (self.username, self.auth_token)
 
-    def startJob(self, job):
-        url = self.jenkins_url+"/job/" + job + "/build"
+    def startJob(self, jobname):
+        url = self.jenkins_url+"/job/" + jobname + "/build"
         return requests.post(url, auth=self.getAuth())
 
-    def abortJob(self, job):
-        url = self.jenkins_url+"/job/" + job + "/lastBuild/stop"
+    def abortJob(self, jobname):
+        url = self.jenkins_url+"/job/" + jobname + "/lastBuild/stop"
         return requests.post(url, auth=self.getAuth())
 
     def getAllJobs(self):
-        url = self.jenkins_url + "/api/json?tree=jobs[name]"
-        return requests.get(url, auth=self.getAuth())
+        if not self.jobs:
+            self.refetchAllJobs()
+        return self.jobs
 
-    def getJobStatus(self, job):
-        url = self.jenkins_url + "/job/" + job + \
+    def refetchAllJobs(self):
+        url = self.jenkins_url + "/api/json?tree=jobs[name]"
+        r = requests.get(url, auth=self.getAuth())
+        self.jobs = [job["name"] for job in r.json()['jobs']]
+
+    def getJobStatus(self, jobname):
+        url = self.jenkins_url + "/job/" + jobname + \
             "/lastBuild/api/json?tree=result,timestamp,estimatedDuration,number,building,duration"
         return requests.get(url, auth=self.getAuth())
 
@@ -63,8 +68,7 @@ if __name__ == "__main__":
     jenkins = Jenkins()
     jenkins.readSettingsFromFile()
 
-    r = jenkins.getAllJobs()
-    # pprint(vars(r))
+    print(jenkins.getAllJobs())
 
     r = jenkins.getJobStatus("sleep-test")
     # print(r.json())
@@ -79,7 +83,6 @@ if __name__ == "__main__":
         r = jenkins.getJobStatus("sleep-test")
         print(r.json()["building"])
         time.sleep(2)
-    exit()
     # Abort the job
     r = jenkins.abortJob("sleep-test")
     print(r.text)
