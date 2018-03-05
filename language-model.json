@@ -44,6 +44,15 @@
                     }
                 ],
                 "samples": [
+                    "to stop {jobname}",
+                    "to abort {jobname}",
+                    "to cancel {jobname}",
+                    "abort build {jobname}",
+                    "stop build {jobname}",
+                    "abort build",
+                    "cancel job",
+                    "abort job",
+                    "abort a job",
                     "abort {jobname}",
                     "stop the build for {jobname}",
                     "stop {jobname}",
@@ -124,25 +133,148 @@
                     {
                         "id": "",
                         "name": {
-                            "value": "sleep test",
-                            "synonyms": [
-                                "sleep-test"
-                            ]
+                            "value": "deploy master",
+                            "synonyms": []
                         }
                     },
                     {
                         "id": "",
                         "name": {
-                            "value": "BalloonInc-web",
-                            "synonyms": [
-                                "to release our website",
-                                "our website release",
-                                "balloon inc website release",
-                                "website",
-                                "our website",
-                                "the balloon inc website",
-                                "the website"
-                            ]
+                            "value": "release master",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "build master",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "continuous build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "jemmy tests",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "unit tests",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "release",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "release website",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "deploy website",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "website build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge beta to production",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge master to production",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge master to release",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge master to beta",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "production build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "push to production",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "beta build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "release build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "test job",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "full tests",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "smoke tests",
+                            "synonyms": []
                         }
                     }
                 ]
@@ -194,10 +326,9 @@
                     {
                         "name": "jobname",
                         "type": "JOBNAME",
-                        "confirmationRequired": true,
+                        "confirmationRequired": false,
                         "elicitationRequired": true,
                         "prompts": {
-                            "confirmation": "Confirm.Intent-CancelJobIntent.IntentSlot-jobname",
                             "elicitation": "Elicit.Intent-CancelJobIntent.IntentSlot-jobname"
                         }
                     }

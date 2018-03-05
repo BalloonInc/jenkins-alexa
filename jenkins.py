@@ -80,12 +80,12 @@ def testJobInteraction(jenkins):
 
     # Get the job status immediately
     r = jenkins.getJobStatus("sleep-test")
-    print(r.json()["building"])
+    print(r.json())
 
     # Get it again ten seconds later
     time.sleep(10)
     r = jenkins.getJobStatus("sleep-test")
-    print(r.json()["building"])
+    print(r.json())
 
     # Abort the job
     r = jenkins.abortJob("sleep-test")

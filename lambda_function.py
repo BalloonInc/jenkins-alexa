@@ -10,6 +10,7 @@ import time
 import jenkins
 from jenkins import Jenkins
 import alexahelpers as ah
+import humantime
 
 jenkins = Jenkins()
 
@@ -31,7 +32,7 @@ def getWelcomeResponse():
 
 def endSession():
     card_title = "Session Ended"
-    speech_output = "Jenkins, out, have a nice day! "
+    speech_output = "Jenkins out, have a nice day! "
     should_end_session = True
     return ah.build_response({}, ah.build_speechlet_response(
         card_title, speech_output, None, should_end_session))
@@ -39,66 +40,103 @@ def endSession():
 
 def startJob(intent, session):
     session_attributes = {}
-    speech_output = ""
-    directives = None
+    should_end_session = False
     rawJobName = getRawJobNameFromIntent(intent)
     if rawJobName:
         print("raw job name found")
         jobName = jenkins.searchJobByName(rawJobName)
         if not jobName:
             print("didn't understand the jobname")
-            speech_output = "I didn't find the job: " + rawJobName
+            speech_output = "I didn't find the job: " + rawJobName + ". Which job should I start?"
         else:
             print("all good, found the job, starting it now.")
             r = jenkins.startJob(jobName)
-            speech_output = "The job is queued for running, and will take approximately "
+            eta = jenkins.getJobStatus(jobName).json()["estimatedDuration"]
+
+            speech_output = "The job is queued for running, and will take approximately " + humantime.format(eta // 1000)
+            should_end_session = True
     else:
         print("no job name given")
-        directives = [{"type": "Dialog.Delegate"}]
+        return ah.build_response(session_attributes, ah.build_speechlet_directive())
 
-    should_end_session = False
-    reprompt_text = "Which job should I start?"
+    reprompt_text = "Again: Which job should I start?"
+
     return ah.build_response(session_attributes, ah.build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session, directives))
+        "Start job", speech_output, reprompt_text, should_end_session))
 
 
 def abortJob(intent, session):
     session_attributes = {}
-    r = jenkins.abortJob("sleep-test")
-    speech_output = "I aborted the job."
-    reprompt_text = "Which job should I abort?"
     should_end_session = False
+    rawJobName = getRawJobNameFromIntent(intent)
+    if rawJobName and intent['confirmationStatus'] != 'NONE':
+        print("raw job name found")
+        jobName = jenkins.searchJobByName(rawJobName)
+        if not jobName:
+            print("didn't understand the jobname")
+            speech_output = "I didn't find the job: " + rawJobName + ". Which job should I abort?"
+        else:
+            print("all good, found the job, aborting it now.")
+            r = jenkins.abortJob(jobName)
+            speech_output = "I requested for " + jobName + " to be aborted."
+            should_end_session = True
+    else:
+        print("no job name given")
+        return ah.build_response(session_attributes, ah.build_speechlet_directive())
+
+    reprompt_text = "Again, which job should I abort?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+        "Abort job", speech_output, reprompt_text, should_end_session))
 
 
 def getJobStatus(intent, session):
     session_attributes = {}
-    reprompt_text = "Which job should I get the status for?"
     should_end_session = False
-
-    r = jenkins.getJobStatus("sleep-test")
-    if r.status_code > 299 or r.status_code < 200:
-        speech_output = "I cannot get a status at the moment. Try again in a little while."
+    rawJobName = getRawJobNameFromIntent(intent)
+    if rawJobName:
+        print("raw job name found")
+        jobName = jenkins.searchJobByName(rawJobName)
+        if not jobName:
+            print("didn't understand the jobname")
+            speech_output = "I didn't find the job: " + rawJobName + ". Which job should I get the status for?"
+        else:
+            print("all good, found the job, getting status now.")
+            r = jenkins.getJobStatus(jobName)
+            speech_output = getSpeechOutputForStatus(r)
+            should_end_session = True
     else:
-        res = r.json()
+        print("no job name given")
+        return ah.build_response(session_attributes, ah.build_speechlet_directive())
+
+    reprompt_text = "Again, which job should I get the status for?"
+    return ah.build_response(session_attributes, ah.build_speechlet_response(
+        "Get status", speech_output, reprompt_text, should_end_session))
+
+def getSpeechOutputForStatus(response):
+    if response.status_code > 299 or response.status_code < 200:
+        return "I cannot get a status at the moment. Try again in a little while."
+    else:
+        res = response.json()
         if res["building"]:
-            speech_output = "The build is ongoing, expect it to run for another" + \
-                res["duration"] - (time.time() - res["timestamp"])
+            eta = res["estimatedDuration"]//1000 - (round(time.time()) - res["timestamp"]//1000)
+            if eta > 10:
+                return "The build is ongoing, expect it to run for another" + \
+                    humantime.format(eta)
+            else:
+                return "The build is still ongoing, but should be done any minute now."
+
         else:
             if res["result"] == "SUCCESS":
-                speech_output = "The build finished succesfully in " + \
-                    str(res["duration"])
+                return "The build finished succesfully in " + \
+                    humantime.format(res["duration"]//1000)
             elif res["result"] == "ABORTED":
-                speech_output = "The build was aborted after " + \
-                    str(res["duration"])
+                return "The build was aborted after " + \
+                    humantime.format(res["duration"]//1000)
             elif res["result"] == "FAILED":
-                speech_output = "The build failed after " + \
-                    str(res["duration"])
+                return "The build failed after " + \
+                    humantime.format(res["duration"]//1000)
             else:
-                speech_output = "The build is " + res["result"]
-    return ah.build_response(session_attributes, ah.build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+                return "The build is " + res["result"]
 
 
 def getRawJobNameFromIntent(intent):
