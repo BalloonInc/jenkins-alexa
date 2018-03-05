@@ -33,17 +33,33 @@
                 "slots": [
                     {
                         "name": "jobname",
-                        "type": "AMAZON.LITERAL"
+                        "type": "JOBNAME",
+                        "samples": [
+                            "{jobname}",
+                            "cancel {jobname}",
+                            "{jobname} please",
+                            "abort {jobname}",
+                            "stop {jobname}"
+                        ]
                     }
                 ],
                 "samples": [
-                    "abort {unit tests|jobname}",
-                    "stop the build for {website|jobname}",
-                    "stop {full tests|jobname}",
-                    "cancel {merge master to beta|jobname}",
-                    "stop the job {merge beta to release|jobname}",
-                    "stop the {merge beta to release|jobname}",
-                    "cancel the {smoke tests|jobname}",
+                    "to stop {jobname}",
+                    "to abort {jobname}",
+                    "to cancel {jobname}",
+                    "abort build {jobname}",
+                    "stop build {jobname}",
+                    "abort build",
+                    "cancel job",
+                    "abort job",
+                    "abort a job",
+                    "abort {jobname}",
+                    "stop the build for {jobname}",
+                    "stop {jobname}",
+                    "cancel {jobname}",
+                    "stop the job {jobname}",
+                    "stop the {jobname}",
+                    "cancel the {jobname}",
                     "stop job",
                     "stop build",
                     "cancel build"
@@ -54,23 +70,29 @@
                 "slots": [
                     {
                         "name": "jobname",
-                        "type": "AMAZON.LITERAL"
+                        "type": "JOBNAME",
+                        "samples": [
+                            "For {jobname}",
+                            "{jobname}",
+                            "{jobname} please",
+                            "Status for {jobname}"
+                        ]
                     }
                 ],
                 "samples": [
-                    "has {merge master to beta|jobname} finished",
-                    "is {full tests|jobname} finished",
-                    "is {merge master to beta|jobname} already finished",
-                    "is {merge beta to release|jobname} still running",
-                    "what's the latest update for {unit tests|jobname}",
-                    "any update on {merge beta to release|jobname}",
-                    "what's up with {smoke tests|jobname}",
-                    "how is {full tests|jobname} doing",
-                    "what is the status of {website build|jobname}",
-                    "status of {full tests|jobname}",
-                    "status of the build of {unit test|jobname}",
-                    "the status of {smoke tests|jobname}",
-                    "get status",
+                    "has {jobname} finished",
+                    "is {jobname} finished",
+                    "is {jobname} already finished",
+                    "is {jobname} still running",
+                    "what's the latest update for {jobname}",
+                    "any update on {jobname}",
+                    "what's up with {jobname}",
+                    "how is {jobname} doing",
+                    "what is the status of {jobname}",
+                    "status of {jobname}",
+                    "status of the build of {jobname}",
+                    "the status of {jobname}",
+                    "get statu",
                     "status",
                     "status update",
                     "I want to get the status of a job"
@@ -81,22 +103,182 @@
                 "slots": [
                     {
                         "name": "jobname",
-                        "type": "AMAZON.LITERAL"
+                        "type": "JOBNAME",
+                        "samples": [
+                            "{jobname}",
+                            "{jobname} please",
+                            "start {jobname}",
+                            "build {jobname}",
+                            "I want to run {jobname}",
+                            "run {jobname}"
+                        ]
                     }
                 ],
                 "samples": [
-                    "run job {beta build|jobname}",
-                    "run {sleep test|jobname}",
-                    "build {merge beta to staging|jobname}",
-                    "initiate the build for {sleep test|jobname}",
-                    "start {sleep test|jobname}",
-                    "start job {sleep test|jobname}",
+                    "run job {jobname}",
+                    "run {jobname}",
+                    "build {jobname}",
+                    "initiate the build for {jobname}",
+                    "start {jobname}",
+                    "start job {jobname}",
                     "start job",
                     "start build"
                 ]
             }
         ],
         "types": [
+            {
+                "name": "JOBNAME",
+                "values": [
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "deploy master",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "release master",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "build master",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "continuous build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "jemmy tests",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "unit tests",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "release",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "release website",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "deploy website",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "website build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge beta to production",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge master to production",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge master to release",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "merge master to beta",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "production build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "push to production",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "beta build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "release build",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "test job",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "full tests",
+                            "synonyms": []
+                        }
+                    },
+                    {
+                        "id": "",
+                        "name": {
+                            "value": "smoke tests",
+                            "synonyms": []
+                        }
+                    }
+                ]
+            },
             {
                 "name": "STATUS",
                 "values": [
@@ -131,5 +313,142 @@
                 ]
             }
         ]
-    }
+    },
+    "dialog": {
+        "intents": [
+            {
+                "name": "CancelJobIntent",
+                "confirmationRequired": true,
+                "prompts": {
+                    "confirmation": "Confirm.Intent-CancelJobIntent"
+                },
+                "slots": [
+                    {
+                        "name": "jobname",
+                        "type": "JOBNAME",
+                        "confirmationRequired": false,
+                        "elicitationRequired": true,
+                        "prompts": {
+                            "elicitation": "Elicit.Intent-CancelJobIntent.IntentSlot-jobname"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "JobStatusIntent",
+                "confirmationRequired": false,
+                "prompts": {},
+                "slots": [
+                    {
+                        "name": "jobname",
+                        "type": "JOBNAME",
+                        "confirmationRequired": false,
+                        "elicitationRequired": true,
+                        "prompts": {
+                            "elicitation": "Elicit.Intent-JobStatusIntent.IntentSlot-jobname"
+                        }
+                    }
+                ]
+            },
+            {
+                "name": "StartJobIntent",
+                "confirmationRequired": false,
+                "prompts": {},
+                "slots": [
+                    {
+                        "name": "jobname",
+                        "type": "JOBNAME",
+                        "confirmationRequired": false,
+                        "elicitationRequired": true,
+                        "prompts": {
+                            "elicitation": "Elicit.Intent-StartJobIntent.IntentSlot-jobname"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "prompts": [
+        {
+            "id": "Confirm.Intent-CancelJobIntent",
+            "variations": [
+                {
+                    "type": "PlainText",
+                    "value": "Just to be clear, you want to cancel {jobname}, correct?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "I will cancel {jobname}, is that what you want?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "Please confirm that you want to cancel {jobname}?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "Just to be sure, you want to cancel {jobname}?"
+                }
+            ]
+        },
+        {
+            "id": "Elicit.Intent-CancelJobIntent.IntentSlot-jobname",
+            "variations": [
+                {
+                    "type": "PlainText",
+                    "value": "Which job do you want to cancel?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "Which job?"
+                }
+            ]
+        },
+        {
+            "id": "Confirm.Intent-CancelJobIntent.IntentSlot-jobname",
+            "variations": [
+                {
+                    "type": "PlainText",
+                    "value": "Just to be sure, you want to cancel {jobname}?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "Please confirm that you want to cancel {jobname}?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "I will cancel {jobname}, is that what you want?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "Just to be clear, you want to cancel {jobname}, correct?"
+                }
+            ]
+        },
+        {
+            "id": "Elicit.Intent-JobStatusIntent.IntentSlot-jobname",
+            "variations": [
+                {
+                    "type": "PlainText",
+                    "value": "Which job?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "For which job should I give you the status?"
+                }
+            ]
+        },
+        {
+            "id": "Elicit.Intent-StartJobIntent.IntentSlot-jobname",
+            "variations": [
+                {
+                    "type": "PlainText",
+                    "value": "Which job should I start?"
+                },
+                {
+                    "type": "PlainText",
+                    "value": "Ok, I can start a job. Which one?"
+                }
+            ]
+        }
+    ]
 }

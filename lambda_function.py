@@ -57,9 +57,10 @@ def startJob(intent, session):
             should_end_session = True
     else:
         print("no job name given")
-        speech_output = "Which job should I start?"
+        return ah.build_response(session_attributes, ah.build_speechlet_directive())
 
     reprompt_text = "Again: Which job should I start?"
+
     return ah.build_response(session_attributes, ah.build_speechlet_response(
         "Start job", speech_output, reprompt_text, should_end_session))
 
@@ -68,7 +69,7 @@ def abortJob(intent, session):
     session_attributes = {}
     should_end_session = False
     rawJobName = getRawJobNameFromIntent(intent)
-    if rawJobName:
+    if rawJobName and intent['confirmationStatus'] != 'NONE':
         print("raw job name found")
         jobName = jenkins.searchJobByName(rawJobName)
         if not jobName:
@@ -81,7 +82,7 @@ def abortJob(intent, session):
             should_end_session = True
     else:
         print("no job name given")
-        speech_output = "Which job should I cancel?"
+        return ah.build_response(session_attributes, ah.build_speechlet_directive())
 
     reprompt_text = "Again, which job should I abort?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
@@ -105,7 +106,7 @@ def getJobStatus(intent, session):
             should_end_session = True
     else:
         print("no job name given")
-        speech_output = "Which job should I get the status for?"
+        return ah.build_response(session_attributes, ah.build_speechlet_directive())
 
     reprompt_text = "Again, which job should I get the status for?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
