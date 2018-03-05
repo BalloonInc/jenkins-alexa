@@ -3,6 +3,18 @@ Use Alexa to trigger Jenkins builds. You can start builds, stop builds, and ask 
 You start a job by telling Alexa the jobname, and Alexa will do some fuzzy search in the list of all jobs on your jenkins instance, so you don't need to map any voice input to job names. 
 
 
+## Sample utterances
+You can start jenkins with
+> Alexa, start jenkins.
+
+Then ask me to interact with a job:
+> Alexa, start build {release}
+> Alexa, cancel {deployment to beta}
+> Alexa, what is the status of the job {merge master to beta}
+
+You can also avoid the two commands, by instructing Alexa to go and ask Jenkins directly:
+> Alexa, ask jenkins what the status is for {continuous build}
+d
 ## Requirements
 - A running jenkins instance, and an account (username+API token) that has permissions to start and stop jobs.
 - Amazon echo family device, or home made alternative (raspberry pi + alexa)
