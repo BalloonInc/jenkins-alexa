@@ -117,10 +117,10 @@ def getSpeechOutputForStatus(response):
     else:
         res = response.json()
         if res["building"]:
-            time = res["duration"]//1000 - (round(time.time()) - res["timestamp"]//1000)
-            if time > 10:
+            eta = res["estimatedDuration"]//1000 - (round(time.time()) - res["timestamp"]//1000)
+            if eta > 10:
                 return "The build is ongoing, expect it to run for another" + \
-                    humantime.format(res["duration"]//1000 - (round(time.time()) - res["timestamp"]//1000))
+                    humantime.format(eta)
             else:
                 return "The build is still ongoing, but should be done any minute now."
 
