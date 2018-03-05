@@ -17,7 +17,7 @@ def build_speechlet_response(title, output, reprompt_text, should_end_session, d
         'card': {
             'type': 'Simple',
             'title': "Jenkins - " + title,
-            'content': "Jenkins - " + output
+            'content': output
         },
         'reprompt': {
             'outputSpeech': {

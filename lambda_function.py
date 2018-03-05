@@ -61,7 +61,7 @@ def startJob(intent, session):
 
     reprompt_text = "Again: Which job should I start?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+        "Start job", speech_output, reprompt_text, should_end_session))
 
 
 def abortJob(intent, session):
@@ -85,7 +85,7 @@ def abortJob(intent, session):
 
     reprompt_text = "Again, which job should I abort?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+        "Abort job", speech_output, reprompt_text, should_end_session))
 
 
 def getJobStatus(intent, session):
@@ -109,7 +109,7 @@ def getJobStatus(intent, session):
 
     reprompt_text = "Again, which job should I get the status for?"
     return ah.build_response(session_attributes, ah.build_speechlet_response(
-        intent['name'], speech_output, reprompt_text, should_end_session))
+        "Get status", speech_output, reprompt_text, should_end_session))
 
 def getSpeechOutputForStatus(response):
     if response.status_code > 299 or response.status_code < 200:
