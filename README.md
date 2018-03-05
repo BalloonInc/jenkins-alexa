@@ -9,7 +9,9 @@ You can start jenkins with
 
 Then ask me to interact with a job:
 > Alexa, start build {release}
+
 > Alexa, cancel {deployment to beta}
+
 > Alexa, what is the status of the job {merge master to beta}
 
 You can also avoid the two commands, by instructing Alexa to go and ask Jenkins directly:
