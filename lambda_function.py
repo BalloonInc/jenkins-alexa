@@ -113,24 +113,24 @@ def getJobStatus(intent, session):
 
 def getSpeechOutputForStatus(response):
     if response.status_code > 299 or response.status_code < 200:
-        speech_output = "I cannot get a status at the moment. Try again in a little while."
+        return "I cannot get a status at the moment. Try again in a little while."
     else:
         res = response.json()
         if res["building"]:
-            speech_output = "The build is ongoing, expect it to run for another" + \
-                humantime.format((res["duration"] - (time.time() - res["timestamp"]))//1000)
+            return "The build is ongoing, expect it to run for another" + \
+                humantime.format((res["duration"]//1000 - (round(time.time()) - res["timestamp"]//1000)))
         else:
             if res["result"] == "SUCCESS":
-                speech_output = "The build finished succesfully in " + \
+                return "The build finished succesfully in " + \
                     humantime.format(res["duration"]//1000)
             elif res["result"] == "ABORTED":
-                speech_output = "The build was aborted after " + \
+                return "The build was aborted after " + \
                     humantime.format(res["duration"]//1000)
             elif res["result"] == "FAILED":
-                speech_output = "The build failed after " + \
+                return "The build failed after " + \
                     humantime.format(res["duration"]//1000)
             else:
-                speech_output = "The build is " + res["result"]
+                return "The build is " + res["result"]
 
 
 def getRawJobNameFromIntent(intent):
