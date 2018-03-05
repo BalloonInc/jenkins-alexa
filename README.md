@@ -10,13 +10,16 @@ You can start jenkins with
 Then ask me to interact with a job:
 > Alexa, start build {release}
 
-> Alexa, cancel {deployment to beta}
+> Alexa, is {release build} still running?
 
-> Alexa, what is the status of the job {merge master to beta}
+> Alexa, what is the status of the job {merge master to beta}?
+
+> Alexa, cancel {deployment to beta}
 
 You can also avoid the two commands, by instructing Alexa to go and ask Jenkins directly:
 > Alexa, ask jenkins what the status is for {continuous build}
 d
+
 ## Requirements
 - A running jenkins instance, and an account (username+API token) that has permissions to start and stop jobs.
 - Amazon echo family device, or home made alternative (raspberry pi + alexa)
@@ -51,4 +54,4 @@ If your echo is linked with the same account as your development account, you sh
 - for using `jenkins.py` locally, rename settings.yaml.sample to settings.yaml, and update it with your jenkins url and authentication parameters.
 - all `print` statements are written to Amazon's CloudWatch logging. This is very convenient.
 - You can test your lambda with test events. This way you don't need to use a voice controlled device all the time.
-- Setting `should_end_session` in the intents (`lambda_function.py`) ensures your echo session never closes, which is nice for testing purposes.
+- Setting `should_end_session` in the intents to false (`lambda_function.py`) ensures your echo session never closes, which is nice for testing purposes.
